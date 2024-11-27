@@ -1,6 +1,5 @@
 package com.nodiumhosting.portals.portal;
 
-import com.nodiumhosting.portals.portal.actions.PortalAction;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.player.Player;
 
@@ -20,9 +19,9 @@ public class Portal {
     }
 
     public boolean isInside(BlockPos pos) {
-        boolean insideX = pos.getX() >= pos1.getX() && pos.getX() <= pos2.getX();
-        boolean insideY = pos.getY() >= pos1.getY() && pos.getY() <= pos2.getY();
-        boolean insideZ = pos.getZ() >= pos1.getZ() && pos.getZ() <= pos2.getZ();
+        boolean insideX = pos.getX() >= Math.min(pos1.getX(), pos2.getX()) && pos.getX() <= Math.max(pos1.getX(), pos2.getX());
+        boolean insideY = pos.getY() >= Math.min(pos1.getY(), pos2.getY()) && pos.getY() <= Math.max(pos1.getY(), pos2.getY());
+        boolean insideZ = pos.getZ() >= Math.min(pos1.getZ(), pos2.getZ()) && pos.getZ() <= Math.max(pos1.getZ(), pos2.getZ());
 
         return insideX && insideY && insideZ;
     }
