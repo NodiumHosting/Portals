@@ -1,8 +1,11 @@
 package com.nodiumhosting.portals.command;
 
+import com.google.gson.Gson;
 import com.mojang.brigadier.Command;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.context.CommandContext;
+import com.nodiumhosting.portals.Portals;
+import com.nodiumhosting.portals.events.PortalEvent;
 import com.nodiumhosting.portals.portal.PortalManager;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
@@ -26,6 +29,14 @@ public class PortalCommand {
                                         ctx.getSource().sendFailure(new TextComponent("Failed to reload portals!"));
                                     }
                                     return success;
+                                })
+                        )
+                        .then(Commands.literal("debug")
+                                .requires(source -> source.hasPermission(2))
+                                .executes(ctx -> {
+                                    Gson gson = new Gson();
+                                    Portals.LOGGER.info("Portal debug: " + gson.toJson(PortalManager.getPortals()));
+                                    return 1;
                                 })
                         )
         );

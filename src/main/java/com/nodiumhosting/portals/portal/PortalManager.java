@@ -38,6 +38,8 @@ public class PortalManager {
                 portals = savedPortals;
             }
 
+            Portals.LOGGER.info("(Portals) Loaded " + portals.size() + " portals from " + path);
+
             return 1;
         } catch (Exception e) {
             Portals.LOGGER.error("(Portals) Failed to load portals: " + e.getMessage());
@@ -52,6 +54,7 @@ public class PortalManager {
     }
 
     public static boolean isInsidePortal(Player player) {
+
         ResourceLocation registryName = player.level.getBlockState(player.blockPosition()).getBlock().getRegistryName();
         if (registryName == null) return false;
         String blockName = registryName.toString();

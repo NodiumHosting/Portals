@@ -2,6 +2,7 @@ package com.nodiumhosting.portals.portal;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.phys.Vec3;
 
 public class PortalAction {
     public static PortalAction newCommandAction(String command) {
@@ -11,10 +12,12 @@ public class PortalAction {
         return action;
     }
 
-    public static PortalAction newTeleportAction(BlockPos destination) {
+    public static PortalAction newTeleportAction(String x, String y, String z) {
         PortalAction action = new PortalAction();
         action.type = ActionType.TELEPORT;
-        action.destination = destination;
+        action.x = x;
+        action.y = y;
+        action.z = z;
         return action;
     }
     
@@ -31,7 +34,13 @@ public class PortalAction {
 
     private ActionType type;
     private String command;
-    private BlockPos destination;
+    private String x;
+    private String y;
+    private String z;
+
+    private Vec3 destination() {
+        return new Vec3(Double.parseDouble(x), Double.parseDouble(y), Double.parseDouble(z));
+    }
 
     public void onPortalEnter(Player player) {
         switch (type) {
@@ -39,7 +48,7 @@ public class PortalAction {
                 player.getServer().getCommands().performCommand(player.createCommandSourceStack().withPermission(4), command);
                 break;
             case TELEPORT:
-                player.teleportTo(destination.getX(), destination.getY(), destination.getZ());
+                player.teleportTo(destination().x(), destination().y(), destination().z());
                 break;
         }
     }
