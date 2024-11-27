@@ -6,13 +6,18 @@ import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.context.CommandContext;
 import com.nodiumhosting.portals.Portals;
 import com.nodiumhosting.portals.events.PortalEvent;
+import com.nodiumhosting.portals.network.PacketHandler;
+import com.nodiumhosting.portals.network.VelocityTransferPacket;
 import com.nodiumhosting.portals.portal.PortalManager;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
 import net.minecraft.network.chat.TextComponent;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.level.storage.LevelResource;
+import net.minecraftforge.network.PacketDistributor;
 
 import java.nio.file.Path;
+import java.util.function.Supplier;
 
 public class PortalCommand {
     public static void register(CommandDispatcher<CommandSourceStack> dispatcher) {
@@ -36,6 +41,19 @@ public class PortalCommand {
                                 .executes(ctx -> {
                                     Gson gson = new Gson();
                                     Portals.LOGGER.info("Portal debug: " + gson.toJson(PortalManager.getPortals()));
+                                    return 1;
+                                })
+                        )
+                        .then(Commands.literal("packet")
+                                .requires(source -> source.hasPermission(2))
+                                .executes(ctx -> {
+                                    try {
+                                        ServerPlayer player = ctx.getSource().getPlayerOrException();
+                                        Supplier<ServerPlayer> supplier = () -> player;
+                                        PacketHandler.INSTANCE.send(PacketDistributor.PLAYER.with(supplier), new VelocityTransferPacket("test"));
+                                    } catch (Exception e) {
+                                        e.printStackTrace();
+                                    }
                                     return 1;
                                 })
                         )

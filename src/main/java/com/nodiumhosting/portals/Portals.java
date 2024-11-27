@@ -2,6 +2,7 @@ package com.nodiumhosting.portals;
 
 import com.mojang.logging.LogUtils;
 import com.nodiumhosting.portals.command.PortalCommand;
+import com.nodiumhosting.portals.network.PacketHandler;
 import com.nodiumhosting.portals.portal.PortalManager;
 import net.minecraft.world.level.storage.LevelResource;
 import net.minecraftforge.api.distmarker.Dist;
@@ -11,6 +12,8 @@ import net.minecraftforge.event.RegisterCommandsEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.event.server.ServerStartingEvent;
+import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
+import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import org.slf4j.Logger;
 
 import java.nio.file.Path;
@@ -22,6 +25,11 @@ public class Portals {
 
     public Portals() {
         MinecraftForge.EVENT_BUS.register(this);
+        FMLJavaModLoadingContext.get().getModEventBus().addListener(this::setup);
+    }
+
+    public void setup(final FMLCommonSetupEvent event) {
+        event.enqueueWork(PacketHandler::registerPackets);
     }
 
     @SubscribeEvent
@@ -39,4 +47,5 @@ public class Portals {
             PortalCommand.register(event.getDispatcher());
         }
     }
+
 }
