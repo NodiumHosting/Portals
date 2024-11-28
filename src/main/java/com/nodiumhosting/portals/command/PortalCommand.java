@@ -36,27 +36,6 @@ public class PortalCommand {
                                     return success;
                                 })
                         )
-                        .then(Commands.literal("debug")
-                                .requires(source -> source.hasPermission(2))
-                                .executes(ctx -> {
-                                    Gson gson = new Gson();
-                                    Portals.LOGGER.info("Portal debug: " + gson.toJson(PortalManager.getPortals()));
-                                    return 1;
-                                })
-                        )
-                        .then(Commands.literal("packet")
-                                .requires(source -> source.hasPermission(2))
-                                .executes(ctx -> {
-                                    try {
-                                        ServerPlayer player = ctx.getSource().getPlayerOrException();
-                                        Supplier<ServerPlayer> supplier = () -> player;
-                                        PacketHandler.INSTANCE.send(PacketDistributor.PLAYER.with(supplier), new VelocityTransferPacket("test"));
-                                    } catch (Exception e) {
-                                        e.printStackTrace();
-                                    }
-                                    return 1;
-                                })
-                        )
         );
     }
 
